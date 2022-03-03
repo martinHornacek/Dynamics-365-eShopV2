@@ -10,10 +10,5 @@ namespace Basket.API.Model
         }
 
         public DbSet<Item> Items { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Item>().Property(p => p.Price).HasColumnType("decimal(18,2)");
-        }
     }
 }

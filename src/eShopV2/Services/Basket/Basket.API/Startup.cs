@@ -1,4 +1,5 @@
-﻿using Basket.API.Model;
+﻿using Basket.API.Data;
+using Basket.API.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@ namespace Basket.API
 {
     public class Startup
     {
+        public readonly string BasketApiAllowSpecificOrigins = "BasketApiAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -20,15 +23,23 @@ namespace Basket.API
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        { 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(BasketApiAllowSpecificOrigins, builder => builder.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "eShopV2-api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket.API", Version = "v1" });
             });
 
             services.AddDbContext<ItemContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseInMemoryDatabase("Items"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,10 +56,14 @@ namespace Basket.API
 
             app.UseAuthorization();
 
+            app.UseCors(BasketApiAllowSpecificOrigins); //must be placed between UseRouting and UseEndpoints
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            PrepareDb.Populate(app);
         }
     }
 }

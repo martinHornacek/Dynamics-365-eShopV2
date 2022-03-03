@@ -1,16 +1,15 @@
 ﻿<Properties StartupConfiguration="{E0B38774-C884-4D4B-8B82-4291B20CBB4F}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Services/Basket/Basket.API/Startup.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Services/Basket/Basket.API/Controllers/ItemController.cs">
     <Files>
-      <File FileName="Basket.API/Properties/launchSettings.json" Line="1" Column="1" />
-      <File FileName="Services/Basket/Basket.API/Model/Item.cs" Line="12" Column="1" />
-      <File FileName="Services/Basket/Basket.API/Model/ItemPayload.cs" Line="13" Column="32" />
-      <File FileName="Services/Basket/Basket.API/Model/ItemContext.cs" Line="20" Column="1" />
-      <File FileName="Services/Basket/Basket.API/appsettings.json" Line="13" Column="2" />
-      <File FileName="Services/Basket/Basket.API/Program.cs" Line="19" Column="6" />
-      <File FileName="Services/Basket/Basket.API/Startup.cs" Line="17" Column="10" />
-      <File FileName="Services/Basket/Basket.API/Migrations/ItemContextModelSnapshot.cs" Line="1" Column="1" />
-      <File FileName="Services/Basket/Basket.API/Migrations/20220302193344_InitialCreate.cs" Line="17" Column="21" />
-      <File FileName="Services/Basket/Basket.API/Controllers/WeatherForecastController.cs" Line="1" Column="1" />
+      <File FileName="Services/Basket/Basket.API/Model/Item.cs" Line="9" Column="1" />
+      <File FileName="Services/Basket/Basket.API/Data/PrepareDb.cs" Line="10" Column="6" />
+      <File FileName="Services/Basket/Basket.API/Controllers/ItemController.cs" Line="20" Column="32" />
+      <File FileName="Services/Basket/Basket.API/Controllers/QueryStringParameters.cs" Line="18" Column="1" />
+      <File FileName="Services/Basket/Basket.API/Startup.cs" Line="15" Column="61" />
+      <File FileName="Services/Basket/Basket.API/Model/ItemContext.cs" Line="1" Column="1" />
+      <File FileName="Services/Basket/Basket.API/Model/ItemPayload.cs" Line="7" Column="1" />
+      <File FileName="Services/Basket/Basket.API/Program.cs" Line="1" Column="1" />
+      <File FileName="Services/Basket/Basket.API/Properties/launchSettings.json" Line="27" Column="48" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -20,14 +19,21 @@
             <Node name="Services" expanded="True">
               <Node name="Basket" expanded="True">
                 <Node name="Basket.API" expanded="True">
-                  <Node name="Controllers" expanded="True" />
+                  <Node name="Controllers" expanded="True">
+                    <Node name="ItemController.cs" selected="True" />
+                  </Node>
+                  <Node name="Data" expanded="True" />
                   <Node name="Model" expanded="True" />
-                  <Node name="Startup.cs" selected="True" />
+                  <Node name="Properties" expanded="True" />
+                  <Node name="appsettings.json" expanded="True" />
                 </Node>
               </Node>
             </Node>
           </Node>
         </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
