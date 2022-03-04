@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Item.API.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

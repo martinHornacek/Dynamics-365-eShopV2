@@ -19,15 +19,25 @@
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Microsoft.EntityFrameworkCore.InMemory" />
     <None Remove="Data\" />
+    <None Remove="DTOs\" />
+    <None Remove="AutoMapper" />
+    <None Remove="Profiles\" />
+    <None Remove="Swashbuckle.AspNetCore.SwaggerUI" />
+    <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
     <Folder Include="Data\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Profiles\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.2" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.2.3" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
   </ItemGroup>
 </Project>
