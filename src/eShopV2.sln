@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basket", "Basket", "{FAD36F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Domain", "Services\Basket\Basket.Domain\Basket.Domain.csproj", "{EF4B7922-0AFF-4A4A-8161-9078A559E48B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.API", "Services\Basket\Basket.API\Basket.API.csproj", "{25804904-3A01-4D98-8069-BF98AB543F38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{EF4B7922-0AFF-4A4A-8161-9078A559E48B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF4B7922-0AFF-4A4A-8161-9078A559E48B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF4B7922-0AFF-4A4A-8161-9078A559E48B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25804904-3A01-4D98-8069-BF98AB543F38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25804904-3A01-4D98-8069-BF98AB543F38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25804904-3A01-4D98-8069-BF98AB543F38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25804904-3A01-4D98-8069-BF98AB543F38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,5 +45,6 @@ Global
 		{E0B38774-C884-4D4B-8B82-4291B20CBB4F} = {17CDA1FF-CDAB-4366-BFCC-7F8B04DB7A97}
 		{FAD36F02-7F1F-4416-9E5A-348C3982F42A} = {CBEB65DD-8147-4B12-91C1-43FCB56EDEDB}
 		{EF4B7922-0AFF-4A4A-8161-9078A559E48B} = {FAD36F02-7F1F-4416-9E5A-348C3982F42A}
+		{25804904-3A01-4D98-8069-BF98AB543F38} = {FAD36F02-7F1F-4416-9E5A-348C3982F42A}
 	EndGlobalSection
 EndGlobal

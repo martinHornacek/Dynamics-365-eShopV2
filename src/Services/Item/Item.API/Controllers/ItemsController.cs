@@ -57,7 +57,7 @@ namespace Item.API.Controllers
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<ItemReadDto>(item)); ;
+            return Ok(_mapper.Map<ItemReadDto>(item));
         }
 
         [HttpPost]

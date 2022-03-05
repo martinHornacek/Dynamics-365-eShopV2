@@ -19,7 +19,7 @@ namespace Item.API.Data
         {
             if (!context.Items.Any())
             {
-                Console.WriteLine("--> Seeding Data...");
+                Console.WriteLine("--> Seeding Items Data...");
 
                 context.Items.AddRange(
                     new Model.Item() { Name = "Harry Potter", Price = 90.0m, Category = "Books", Description = "Though Harry's first year at Hogwarts is the best of his life, not everything is perfect." },
