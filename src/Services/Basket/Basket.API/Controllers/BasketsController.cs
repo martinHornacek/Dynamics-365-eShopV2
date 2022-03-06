@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using AutoMapper;
 using Basket.API.Data;
 using Basket.API.DTOs;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Basket.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("BasketApiAllowSpecificOrigins")]
     public class BasketsController : ControllerBase
     {
         private readonly IBasketRepository _repository;

@@ -8,20 +8,20 @@
     <th>Total Price</th>
     <th>&nbsp;</th>
   </tr>
-  <tr *ngFor="let item of storeService.basket.basketItems">
+  <tr *ngFor="let item of basketService.basket.basketItems">
     <td><a routerLink="/items/{{item.item.id}}"><img src="/assets/angular-icon.svg" width="70px"/></a></td>
     <td><a routerLink="/items/{{item.item.id}}">{{item.item.name}}</a></td>
     <td><a routerLink="/items/{{item.item.id}}">{{item.item.price}}</a></td>
     <td><input type="number" [(ngModel)]="item.quantity" size="2" id="quantity"/></td>
     <td><a routerLink="/items/{{item.item.id}}">{{item.item.price * item.quantity}}</a></td>
-    <td><input type="button" (click)="removeFromBasket(item)" id="remove" value="Remove"/></td>
+    <td><input type="button" (click)="removeFromBasket(item.id)" id="remove" value="Remove"/></td>
   </tr>
   <tr>
     <td colspan="4">&nbsp;</td>
-    <td>{{storeService.basket.getTotalValue()}}</td>
+    <td>{{getTotalValue()}}</td>
     <td>&nbsp;</td>
   </tr>  
 </table>
-<button (click)="emptyBasket()" id="empty" [disabled]="storeService.basket.basketItems.length == 0">Empty Basket</button><br/>
-<button routerLink="/checkout" id="checkout" [disabled]="storeService.basket.basketItems.length == 0 || !storeService.basket.isBasketValid()">Go to Checkout..</button><br/>
+<button (click)="emptyBasket()" id="empty" [disabled]="basketService.basket.basketItems.length == 0">Empty Basket</button><br/>
+<button routerLink="/checkout" id="checkout" [disabled]="basketService.basket.basketItems.length == 0 || !isBasketValid()">Go to Checkout..</button><br/>
 <button routerLink="">Back to items</button><br/>

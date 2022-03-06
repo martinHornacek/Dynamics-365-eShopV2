@@ -288,7 +288,8 @@ src/**/inf.yaml
 /out-tsc  
   
 # dependencies  
-/node_modules  
+/node_modules 
+.angular/cache 
   
 # IDEs and editors  
 /.idea  

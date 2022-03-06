@@ -4,12 +4,14 @@ using AutoMapper;
 using Basket.API.Data;
 using Basket.API.DTOs;
 using Basket.API.Model;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Basket.API.Controllers
 {
     [Route("api/baskets/{basketId}/[controller]")]
     [ApiController]
+    [EnableCors("BasketApiAllowSpecificOrigins")]
     public class BasketItemsController : ControllerBase
     {
         private readonly IBasketRepository _repository;
@@ -57,7 +59,7 @@ namespace Basket.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<BasketReadDto> AddBasketItem(int basketId, BasketItemCreateDto basketItemDto)
+        public ActionResult<BasketItemReadDto> AddBasketItem(int basketId, BasketItemCreateDto basketItemDto)
         {
             Console.WriteLine($"--> Hit AddBasketItem: {basketId}");
 
@@ -76,14 +78,11 @@ namespace Basket.API.Controllers
             _repository.AddBasketItem(basketId, basketItem);
             _repository.SaveChanges();
 
-            var basketItemReadDto = _mapper.Map<BasketItemReadDto>(basketItem);
-
-            return CreatedAtRoute(nameof(GetBasketItemForBasket),
-                new { basketId = basketId, basketItemId = basketItemReadDto.Id }, basketItemReadDto);
+            return Ok(_mapper.Map<BasketItemReadDto>(basketItem));
         }
 
         [HttpDelete]
-        public ActionResult<BasketReadDto> RemoveBasketItem(int basketId, BasketItemDeleteDto basketItemDto)
+        public ActionResult<OkResult> RemoveBasketItem(int basketId, BasketItemDeleteDto basketItemDto)
         {
             Console.WriteLine($"--> Hit RemoveBasketItem: {basketId}");
 

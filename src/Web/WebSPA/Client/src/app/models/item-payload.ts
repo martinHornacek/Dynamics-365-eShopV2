@@ -1,6 +1,6 @@
 import { Item } from "./item";
 
-export interface ItemPayload{
+export interface ItemPayload {
     items: Item[];
     count: number;
 }

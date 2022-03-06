@@ -1,6 +1,7 @@
 import { Item } from "./item";
 
-export class BasketItem {
-    public item: Item = {id: 0, name:"", price: 0, category: "", description: ""};
-    public quantity: number = 0;
+export interface BasketItem {
+    id: number;
+    item: Item;
+    quantity: number;
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Item } from 'src/app/models/item';
+import { BasketService } from 'src/app/services/basket.service';
 import { ItemsService } from 'src/app/services/items.service';
-import { StoreService } from 'src/app/services/store.service';
 
 @Component({
   selector: 'app-item-details',
@@ -11,12 +11,12 @@ import { StoreService } from 'src/app/services/store.service';
 })
 export class ItemDetailsComponent implements OnInit {
 
-  item:Item = {id:0, name:"", price:0, category:"", description:""};
+  item: Item = {id: 0, name:"", price: 0, category: "", description: ""};
 
   constructor(
     private route: ActivatedRoute,
     private itemsService: ItemsService,
-    private storeService: StoreService,
+    private basketService: BasketService,
     private router: Router
   ) { }
 
@@ -31,7 +31,16 @@ export class ItemDetailsComponent implements OnInit {
   }
 
   addToBasket(): void {
-    this.storeService.basket.addItem({item: this.item, quantity: 1});
+    // TODO
+    // handle increase of quantity if item already exists
+    // by initiating updateItemInBasket action (not implemented)
+
+    this.basketService.addItemToBasket(this.item.id, 1)
+      .subscribe((basketItem) => {
+        basketItem.item = this.item; // update the returned basket item object with item ref
+        this.basketService.basket.basketItems.push(basketItem) 
+      });
+
     this.router.navigate(['/basket']);
   }
 }

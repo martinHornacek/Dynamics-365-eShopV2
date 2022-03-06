@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BasketService } from './services/basket.service';
 import { StoreService } from './services/store.service';
 
 @Component({
@@ -10,6 +11,6 @@ export class AppComponent {
   title = 'client';
 
   constructor(
-    public storeService: StoreService
-) { }
+    public basketService: BasketService
+  ) { }
 }

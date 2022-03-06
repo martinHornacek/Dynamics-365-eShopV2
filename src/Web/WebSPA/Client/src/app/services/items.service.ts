@@ -12,7 +12,7 @@ import { ItemPayload } from '../models/item-payload';
 })
 export class ItemsService {
 
-  itemsUrl = `${environment.apiUrl}/items`;
+  itemsUrl = `${environment.itemsApiUrl}/items`;
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })

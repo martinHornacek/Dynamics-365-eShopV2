@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Basket } from '../models/basket';
 import { Filter } from '../models/filter';
 import { Item } from '../models/item';
 
@@ -57,16 +56,5 @@ export class StoreService {
     this._filter.next(val);
   }
 
-  private readonly _basket = new BehaviorSubject<Basket>(new Basket());
-  readonly basket$ = this._basket.asObservable(); 
-  
-  get basket(): Basket {
-    return this._basket.getValue();
-  }
-
-  set basket(val: Basket) {
-    this._basket.next(val);
-  }
   constructor() { }
-
 }

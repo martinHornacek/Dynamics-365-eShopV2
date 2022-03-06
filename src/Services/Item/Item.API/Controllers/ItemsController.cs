@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Item.API.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("BasketApiAllowSpecificOrigins")]
+    [EnableCors("ItemApiAllowSpecificOrigins")]
     [ApiController]
     public class ItemsController : ControllerBase
     {

@@ -3,5 +3,5 @@ export interface Item{
     name: string;
     price: number;
     category: string;
-    description?: string; 
+    description: string; 
 }
