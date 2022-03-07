@@ -1,19 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.810.19
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{CBEB65DD-8147-4B12-91C1-43FCB56EDEDB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Item", "Item", "{17CDA1FF-CDAB-4366-BFCC-7F8B04DB7A97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Item.API", "Services\Item\Item.API\Item.API.csproj", "{E0B38774-C884-4D4B-8B82-4291B20CBB4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Item.API", "Services\Item\Item.API\Item.API.csproj", "{E0B38774-C884-4D4B-8B82-4291B20CBB4F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basket", "Basket", "{FAD36F02-7F1F-4416-9E5A-348C3982F42A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Domain", "Services\Basket\Basket.Domain\Basket.Domain.csproj", "{EF4B7922-0AFF-4A4A-8161-9078A559E48B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basket.Management", "Services\Basket\Basket.Management\Basket.Management.csproj", "{EF4B7922-0AFF-4A4A-8161-9078A559E48B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.API", "Services\Basket\Basket.API\Basket.API.csproj", "{25804904-3A01-4D98-8069-BF98AB543F38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basket.API", "Services\Basket\Basket.API\Basket.API.csproj", "{25804904-3A01-4D98-8069-BF98AB543F38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +37,14 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E87D3B29-5943-4500-99C5-4DF9E619F757}
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{17CDA1FF-CDAB-4366-BFCC-7F8B04DB7A97} = {CBEB65DD-8147-4B12-91C1-43FCB56EDEDB}
 		{E0B38774-C884-4D4B-8B82-4291B20CBB4F} = {17CDA1FF-CDAB-4366-BFCC-7F8B04DB7A97}
 		{FAD36F02-7F1F-4416-9E5A-348C3982F42A} = {CBEB65DD-8147-4B12-91C1-43FCB56EDEDB}
 		{EF4B7922-0AFF-4A4A-8161-9078A559E48B} = {FAD36F02-7F1F-4416-9E5A-348C3982F42A}
 		{25804904-3A01-4D98-8069-BF98AB543F38} = {FAD36F02-7F1F-4416-9E5A-348C3982F42A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E87D3B29-5943-4500-99C5-4DF9E619F757}
 	EndGlobalSection
 EndGlobal
