@@ -29,13 +29,13 @@ export class BasketService {
   };
 
   addItemToBasket(itemId: number, quantity: number): Observable<BasketItem> {
-    const url = `${this.basketsUrl}/${this.basket.id}`;
+    const url = `${this.basketsUrl}/${this.basket.id}/basketitems`;
     return this.http.post<BasketItem>(url, { ItemId: itemId, Quantity: quantity })
       .pipe(catchError(this.handleError<BasketItem>(`addItem/${this.basket.id}`, { id: 0, item: { id: 0, price: 0, name: "", category: "", description: "" } as Item, quantity: 0} as BasketItem )));
   }
 
   removeItemFromBasket(basketItemId: number): Observable<unknown> {
-    const url = `${this.basketsUrl}/${this.basket.id}`;
+    const url = `${this.basketsUrl}/${this.basket.id}/basketitems`;
     return this.http.delete(url, { body: { Id: basketItemId } })
       .pipe(catchError(this.handleError(`removeItem/${this.basket.id}`)));
   }

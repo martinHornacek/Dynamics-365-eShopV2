@@ -283,13 +283,13 @@ src/**/inf.yaml
 
 # Angular
 # compiled output  
-/dist  
+**/dist  
 /tmp  
 /out-tsc  
   
 # dependencies  
 /node_modules 
-.angular/cache 
+**/.angular/cache 
   
 # IDEs and editors  
 /.idea  

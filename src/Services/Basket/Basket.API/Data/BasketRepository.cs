@@ -70,6 +70,7 @@ namespace Basket.API.Data
             var basketItem = _context.BasketItems.SingleOrDefault(bi => bi.BasketId == basketId && bi.Id == basketItemId);
             if (basketItem != null)
             {
+                _context.BasketItems.Attach(basketItem);
                 _context.BasketItems.Remove(basketItem);
             }
         }

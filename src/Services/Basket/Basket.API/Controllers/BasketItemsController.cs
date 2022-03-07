@@ -82,7 +82,7 @@ namespace Basket.API.Controllers
         }
 
         [HttpDelete]
-        public ActionResult<OkResult> RemoveBasketItem(int basketId, BasketItemDeleteDto basketItemDto)
+        public ActionResult RemoveBasketItem(int basketId, BasketItemDeleteDto basketItemDto)
         {
             Console.WriteLine($"--> Hit RemoveBasketItem: {basketId}");
 
