@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const environment = {\n  production: true,\n  itemsApiUrl: 'https://localhost:5001/api',\n  basketsApiUrl: 'https://localhost:6001/api'\n};","map":null,"metadata":{},"sourceType":"module"}
