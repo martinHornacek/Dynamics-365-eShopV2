@@ -2,6 +2,6 @@
 {
     public class BasketItemDeleteDto
     {
-        public int Id { get; set; }
+        public string new_id { get; set; }
     }
 }

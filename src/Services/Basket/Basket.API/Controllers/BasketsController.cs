@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Basket.API.Data;
 using Basket.API.DTOs;
@@ -23,19 +24,19 @@ namespace Basket.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<BasketReadDto>> GetBaskets()
+        public async Task<ActionResult<IEnumerable<BasketReadDto>>> GetBaskets()
         {
             Console.WriteLine("--> Getting Baskets....");
 
-            var baskets = _repository.GetAllBaskets();
+            var baskets = await _repository.GetAllBaskets();
 
             return Ok(_mapper.Map<IEnumerable<BasketReadDto>>(baskets));
         }
 
         [HttpGet("{id}", Name = "GetBasketById")]
-        public ActionResult<BasketReadDto> GetBasketById(int id)
+        public async Task<ActionResult<BasketReadDto>> GetBasketById(string id)
         {
-            var basket = _repository.GetBasketById(id);
+            var basket = await _repository.GetBasketById(id);
             if (basket == null)
             {
                 return NotFound();
@@ -44,15 +45,13 @@ namespace Basket.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<BasketReadDto> CreateBasket(BasketCreateDto basketCreateDto)
+        public async Task<ActionResult<BasketReadDto>> CreateBasket(BasketCreateDto basketCreateDto)
         {
             var basketModel = _mapper.Map<Model.Basket>(basketCreateDto);
-            _repository.CreateBasket(basketModel);
-            _repository.SaveChanges();
+            await _repository.CreateBasket(basketModel);
 
             var basketReadDto = _mapper.Map<BasketReadDto>(basketModel);
-
-            return CreatedAtRoute(nameof(GetBasketById), new { Id = basketReadDto.Id }, basketReadDto);
+            return CreatedAtRoute(nameof(GetBasketById), new { Id = basketReadDto.new_id }, basketReadDto);
         }
     }
 }

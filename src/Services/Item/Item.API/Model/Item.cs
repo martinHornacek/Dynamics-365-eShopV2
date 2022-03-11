@@ -6,14 +6,14 @@ namespace Item.API.Model
     { 
         [Key]
         [Required]
-        public int Id { get; set; }
+        public string new_id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string new_name { get; set; }
         [Required]
-        public decimal Price { get; set; }
+        public decimal new_price { get; set; }
         [Required]
-        public string Category { get; set; }
+        public string new_category { get; set; }
         [Required]
-        public string Description { get; set; }
+        public string new_description { get; set; }
     }
 }

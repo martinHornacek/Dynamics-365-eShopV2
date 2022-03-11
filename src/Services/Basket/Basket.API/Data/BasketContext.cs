@@ -7,11 +7,10 @@ namespace Basket.API.Data
     {
         public BasketContext(DbContextOptions<BasketContext> options) : base(options)
         {
-
         }
 
         public DbSet<Model.Basket> Baskets { get; set; }
-        public DbSet<Model.BasketItem> BasketItems { get; set; }
+        public DbSet<BasketItem> BasketItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,13 +18,13 @@ namespace Basket.API.Data
                 .Entity<Model.Basket>()
                 .HasMany(b => b.BasketItems)
                 .WithOne(b => b.Basket!)
-                .HasForeignKey(b => b.BasketId);
+                .HasForeignKey(b => b.new_basketid);
 
             modelBuilder
                 .Entity<BasketItem>()
                 .HasOne(bi => bi.Basket)
                 .WithMany(bi => bi.BasketItems)
-                .HasForeignKey(bi => bi.BasketId);
+                .HasForeignKey(bi => bi.new_basketid);
         }
     }
 }

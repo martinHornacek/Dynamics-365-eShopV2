@@ -22,10 +22,10 @@ namespace Item.API.Data
                 Console.WriteLine("--> Seeding Items Data...");
 
                 context.Items.AddRange(
-                    new Model.Item() { Name = "Harry Potter", Price = 90.0m, Category = "Books", Description = "Though Harry's first year at Hogwarts is the best of his life, not everything is perfect." },
-                    new Model.Item() { Name = "Lord of the Rings", Price = 110.0m, Category = "Books", Description = "One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkeness bind them." },
-                    new Model.Item() { Name = "Star Wars", Price = 45.0m, Category = "Movies", Description = "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station, while also attempting to rescue Princess Leia from the mysterious Darth Vader." },
-                    new Model.Item() { Name = "Die Hard", Price = 30.0m, Category = "Movies", Description = "An NYPD officer tries to save his wife and several others taken hostage by German terrorists during a Christmas party at the Nakatomi Plaza in Los Angeles." }
+                    new Model.Item() { new_id = "1", new_name = "Harry Potter", new_price = 90.0m, new_category = "Books", new_description = "Though Harry's first year at Hogwarts is the best of his life, not everything is perfect." },
+                    new Model.Item() { new_id = "2", new_name = "Lord of the Rings", new_price = 110.0m, new_category = "Books", new_description = "One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkeness bind them." },
+                    new Model.Item() { new_id = "3", new_name = "Star Wars", new_price = 45.0m, new_category = "Movies", new_description = "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station, while also attempting to rescue Princess Leia from the mysterious Darth Vader." },
+                    new Model.Item() { new_id = "4", new_name = "Die Hard", new_price = 30.0m, new_category = "Movies", new_description = "An NYPD officer tries to save his wife and several others taken hostage by German terrorists during a Christmas party at the Nakatomi Plaza in Los Angeles." }
                 );
 
                 context.SaveChanges();

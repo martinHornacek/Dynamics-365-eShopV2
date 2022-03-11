@@ -21,7 +21,7 @@ namespace Basket.API.Data
             {
                 Console.WriteLine("--> Seeding Basket Data...");
 
-                context.Baskets.Add(new Model.Basket { Name = "Default Basket", Description = "Default Basket description." });
+                context.Baskets.Add(new Model.Basket { new_id = "1", new_name = "Default Basket", new_description = "Default Basket description.", new_totalvalue = 0m });
                 context.SaveChanges();
             }
             else

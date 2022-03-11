@@ -6,16 +6,18 @@ namespace Basket.API.Model
     {
         [Key]
         [Required]
-        public int Id { get; set; }
+        public string new_id { get; set; }
 
         [Required]
-        public int ItemId { get; set; }
+        public string new_itemid { get; set; }
 
         [Required]
-        public int Quantity { get; set; }
+        public int new_quantity { get; set; }
 
         [Required]
-        public int BasketId { get; set; }
+        public string new_basketid { get; set; }
+
+        public string new_basketitemid { get; set; } // CRM Guid
 
         public Basket Basket { get; set; }
     }

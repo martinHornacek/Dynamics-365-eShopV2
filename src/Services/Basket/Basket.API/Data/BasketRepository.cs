@@ -1,13 +1,20 @@
-﻿using System;
+﻿using Basket.API.DTOs;
+using Basket.API.Model;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Basket.API.Model;
-using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Basket.API.Data
 {
     public class BasketRepository : IBasketRepository
     {
+        private readonly string baseUrl = "http://kmdev16-ver-9/eshop/api/data/v9.0/";
         private readonly BasketContext _context;
 
         public BasketRepository(BasketContext context)
@@ -15,69 +22,104 @@ namespace Basket.API.Data
             _context = context;
         }
 
-        public void AddBasketItem(int basketId, BasketItem basketItem)
+        public async Task AddBasketItem(BasketItemCreateDto basketItem)
         {
             if (basketItem == null)
             {
                 throw new ArgumentNullException(nameof(basketItem));
             }
 
-            _context.BasketItems.Add(basketItem);
+            var payload = JsonConvert.SerializeObject(basketItem);
+            await PostAsync("new_basketitems", payload);
         }
 
-        public void CreateBasket(Model.Basket basket)
+        public async Task CreateBasket(Model.Basket basket)
         {
             if (basket == null)
             {
                 throw new ArgumentNullException(nameof(basket));
             }
 
-            _context.Baskets.Add(basket);
+            var payload = JsonConvert.SerializeObject(basket);
+            await PostAsync("new_baskets", payload);
         }
 
-        public void EmptyBasket(int basketId)
+        public async Task EmptyBasket(string basketId)
         {
-            foreach (var id in _context.BasketItems.Select(bi => bi.Id))
+            var basketItems = await this.GetAllBasketItemsForBasket(basketId);
+            foreach (var basketItem in basketItems)
             {
-                var basketItem = new BasketItem { Id = id };
-                _context.BasketItems.Attach(basketItem);
-                _context.BasketItems.Remove(basketItem);
+                await RemoveBasketItem(basketItem.new_basketitemid);
             }
         }
 
-        public IEnumerable<BasketItem> GetAllBasketItemsForBasket(int basketId)
+        public async Task<IEnumerable<BasketItem>> GetAllBasketItemsForBasket(string basketId)
         {
-            return _context.BasketItems.Where(bi => bi.BasketId == basketId).ToList();
+            var responseJson = await GetStringAsync($"new_basketitems?$select=new_name,new_id,new_itemid,new_basketid,new_quantity&$filter=new_basketid eq '{basketId}'");
+            ODataResponse<BasketItem> oDataResponse = JsonConvert.DeserializeObject<ODataResponse<BasketItem>>(responseJson);
+            var basketItems = oDataResponse.Value;
+            return basketItems;
         }
 
-        public BasketItem GetBasketItemForBasket(int basketId, int basketItemId)
+        public async Task<BasketItem> GetBasketItemForBasket(string basketId, string basketItemId)
         {
-            return _context.BasketItems.Where(bi => bi.BasketId == basketId && bi.Id == basketItemId).FirstOrDefault();
+            var responseJson = await GetStringAsync($"new_basketitems?$select=new_name,new_id,new_itemid,new_basketid,new_quantity&$filter=new_basketid eq '{basketId}' and new_id eq '{basketItemId}'");
+            ODataResponse<BasketItem> oDataResponse = JsonConvert.DeserializeObject<ODataResponse<BasketItem>>(responseJson);
+            var basketItem = oDataResponse.Value.FirstOrDefault();
+            return basketItem;
         }
 
-        public IEnumerable<Model.Basket> GetAllBaskets()
+        public async Task<IEnumerable<Model.Basket>> GetAllBaskets()
         {
-            return _context.Baskets.ToList();
+            var responseJson = await GetStringAsync("new_baskets?$select=new_name,new_id,new_description,new_totalvalue");
+            ODataResponse<Model.Basket> oDataResponse = JsonConvert.DeserializeObject<ODataResponse<Model.Basket>>(responseJson);
+            var baskets = oDataResponse.Value;
+            return baskets;
         }
 
-        public Model.Basket GetBasketById(int basketId)
+        public async Task<Model.Basket> GetBasketById(string basketId)
         {
-            return _context.Baskets.FirstOrDefault(b => b.Id == basketId);
+            var responseJson = await GetStringAsync($"new_baskets?$select=new_name,new_id,new_description,new_totalvalue&$filter=new_id eq '{basketId}'");
+            ODataResponse<Model.Basket> oDataResponse = JsonConvert.DeserializeObject<ODataResponse<Model.Basket>>(responseJson);
+            var basket = oDataResponse.Value.FirstOrDefault();
+            return basket;
         }
 
-        public void RemoveBasketItem(int basketId, int basketItemId)
+        public async Task RemoveBasketItem(string basketItemIdentifier)
         {
-            var basketItem = _context.BasketItems.SingleOrDefault(bi => bi.BasketId == basketId && bi.Id == basketItemId);
-            if (basketItem != null)
-            {
-                _context.BasketItems.Attach(basketItem);
-                _context.BasketItems.Remove(basketItem);
-            }
+            var url = $"new_basketitems({basketItemIdentifier})";
+            await DeleteAsync(url);
         }
 
-        public bool SaveChanges()
+        private Task<string> GetStringAsync(string url)
         {
-            return _context.SaveChanges() >= 0;
+            var uri = new Uri(baseUrl);
+            var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };
+            var handler = new HttpClientHandler { Credentials = credentialsCache };
+            var httpClient = new HttpClient(handler) { BaseAddress = uri, Timeout = new TimeSpan(0, 0, 10) };
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            return httpClient.GetStringAsync(url);
+        }
+
+        private Task<HttpResponseMessage> PostAsync(string url, string payload)
+        {
+            var uri = new Uri(baseUrl);
+            var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };
+            var handler = new HttpClientHandler { Credentials = credentialsCache };
+            var httpClient = new HttpClient(handler) { BaseAddress = uri, Timeout = new TimeSpan(0, 0, 10) };
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+            return httpClient.PostAsync(url, content);
+        }
+
+        private Task<HttpResponseMessage> DeleteAsync(string url)
+        {
+            var uri = new Uri(baseUrl);
+            var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };
+            var handler = new HttpClientHandler { Credentials = credentialsCache };
+            var httpClient = new HttpClient(handler) { BaseAddress = uri, Timeout = new TimeSpan(0, 0, 10) };
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            return httpClient.DeleteAsync(url);
         }
     }
 }

@@ -1,8 +1,8 @@
 import { BasketItem } from "./basket-item";
 
 export interface Basket {
-    id: number;
-    name: string;
-    description: string;
+    new_id: string;
+    new_name: string;
+    new_description: string;
     basketItems: BasketItem[];
 }

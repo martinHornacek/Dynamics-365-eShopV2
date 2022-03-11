@@ -1,19 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Basket.API.DTOs;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Basket.API.Data
 {
     public interface IBasketRepository
     {
-        bool SaveChanges();
 
-        IEnumerable<Model.BasketItem> GetAllBasketItemsForBasket(int basketId);
-        Model.BasketItem GetBasketItemForBasket(int basketId, int basketItemId);
-        void AddBasketItem(int basketId, Model.BasketItem item);
-        void RemoveBasketItem(int basketId, int basketItemId);
+        Task<IEnumerable<Model.BasketItem>> GetAllBasketItemsForBasket(string basketId);
+        Task<Model.BasketItem> GetBasketItemForBasket(string basketId, string basketItemId);
+        Task AddBasketItem(BasketItemCreateDto item);
+        Task RemoveBasketItem(string basketItemIdentifier);
 
-        void EmptyBasket(int basketId);
-        IEnumerable<Model.Basket> GetAllBaskets();
-        Model.Basket GetBasketById(int basketId);
-        void CreateBasket(Model.Basket basket);
+        Task EmptyBasket(string basketId);
+        Task<IEnumerable<Model.Basket>> GetAllBaskets();
+        Task<Model.Basket> GetBasketById(string basketId);
+        Task CreateBasket(Model.Basket basket);
     }
 }

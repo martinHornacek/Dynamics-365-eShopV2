@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Item.API.Data
 {
     public interface IItemRepository
     {
-        bool SaveChanges();
-
-        IEnumerable<Model.Item> GetAllItems();
-        Model.Item GetItemById(int id);
-        void CreateItem(Model.Item item);
+        Task<IEnumerable<Model.Item>> GetAllItems();
+        Task<Model.Item> GetItemById(string id);
+        Task CreateItem(Model.Item item);
     }
 }

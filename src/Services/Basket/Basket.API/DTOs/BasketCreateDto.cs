@@ -5,8 +5,12 @@ namespace Basket.API.DTOs
     public class BasketCreateDto
     {
         [Required]
-        public string Name { get; set; }
+        public string new_id { get; set; }
         [Required]
-        public string Description { get; set; }
+        public string new_name { get; set; }
+        [Required]
+        public string new_description { get; set; }
+        [Required]
+        public decimal new_totalvalue { get; set; }
     }
 }

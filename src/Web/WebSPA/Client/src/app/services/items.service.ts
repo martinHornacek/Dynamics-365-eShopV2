@@ -34,10 +34,10 @@ export class ItemsService {
       .pipe(catchError(this.handleError<ItemPayload>('getItems', { items: [], count: 0 })));
   }
 
-  getItem(id: number): Observable<Item> {
+  getItem(id: string): Observable<Item> {
     const url = `${this.itemsUrl}/${id}`;
     return this.http.get<Item>(url)
-      .pipe(catchError(this.handleError<Item>(`getItem/${id}`, { id: 0, name: "", price: 0, category: "", description: "" })));
+      .pipe(catchError(this.handleError<Item>(`getItem/${id}`, { new_id: "0", new_name: "", new_price: 0, new_category: "", new_description: "" })));
   }
 
   handleError<T>(operation = 'operation', result?: T) {

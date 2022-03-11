@@ -11,7 +11,7 @@ import { ItemsService } from 'src/app/services/items.service';
 })
 export class ItemDetailsComponent implements OnInit {
 
-  item: Item = {id: 0, name:"", price: 0, category: "", description: ""};
+  item: Item = {new_id: "0", new_name:"", new_price: 0, new_category: "", new_description: ""};
 
   constructor(
     private route: ActivatedRoute,
@@ -25,19 +25,18 @@ export class ItemDetailsComponent implements OnInit {
   }
 
   getItem(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = String(this.route.snapshot.paramMap.get('id'));
     this.itemsService.getItem(id)
       .subscribe(item => this.item = item);   
   }
 
   addToBasket(): void {
-    // TODO
-    // handle increase of quantity if item already exists
+    // TODO handle increase of quantity if item already exists
     // by initiating updateItemInBasket action (not implemented)
 
-    this.basketService.addItemToBasket(this.item.id, 1)
+    this.basketService.addItemToBasket(this.item, 1)
       .subscribe((basketItem) => {
-        basketItem.item = this.item; // update the returned basket item object with item ref
+        basketItem.new_item = this.item; // update the returned basket item object with item ref
         this.basketService.basket.basketItems.push(basketItem) 
       });
 

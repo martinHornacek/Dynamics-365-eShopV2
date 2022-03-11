@@ -7,11 +7,13 @@ namespace Basket.API.Model
     {
         [Key]
         [Required]
-        public int Id { get; set; }
+        public string new_id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string new_name { get; set; }
         [Required]
-        public string Description { get; set; }
+        public string new_description { get; set; }
+        [Required]
+        public decimal new_totalvalue { get; set; }
 
         public ICollection<BasketItem> BasketItems { get; set; } = new List<BasketItem>();
     }

@@ -2,8 +2,10 @@
 {
     public class BasketItemReadDto
     {
-        public int Id { get; set; }
-        public int ItemId { get; set; }
-        public int Quantity { get; set; }
+        public string new_id { get; set; }
+        public string new_itemid { get; set; }
+        public int new_quantity { get; set; }
+        public string new_basketid { get; set; }
+        public string new_basketitemdid { get; set; } // CRM Guid
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Item.API.Data;
 using Item.API.DTOs;
@@ -23,18 +24,18 @@ namespace Item.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<ItemPayload> GetItems([FromQuery] QueryStringParameters queryParameters)
+        public async Task<ActionResult<ItemPayload>> GetItems([FromQuery] QueryStringParameters queryParameters)
         {
-            var items = _repository.GetAllItems();
-            IEnumerable<ItemReadDto> returnItems = _mapper.Map<IEnumerable<ItemReadDto>>(items).OrderBy(on => on.Id);
+            var items = await _repository.GetAllItems();
+            IEnumerable<ItemReadDto> returnItems = _mapper.Map<IEnumerable<ItemReadDto>>(items).OrderBy(on => on.new_id);
 
             if (queryParameters.Name != null && !queryParameters.Name.Trim().Equals(string.Empty))
-                returnItems = returnItems.Where(item => item.Name.ToLower().Contains(queryParameters.Name.Trim().ToLower()));
+                returnItems = returnItems.Where(item => item.new_name.ToLower().Contains(queryParameters.Name.Trim().ToLower()));
 
             if (queryParameters.Category != null && !queryParameters.Category.Trim().Equals(string.Empty))
             {
                 string[] categories = queryParameters.Category.Split('#');
-                returnItems = returnItems.Where(item => categories.Contains(item.Category));
+                returnItems = returnItems.Where(item => categories.Contains(item.new_category));
             }
 
             //get total count before paging
@@ -50,9 +51,9 @@ namespace Item.API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetItemById")]
-        public ActionResult<ItemReadDto> GetItemById(int id)
+        public async Task<ActionResult<ItemReadDto>> GetItemById(string id)
         {
-            var item = _repository.GetItemById(id);
+            var item = await _repository.GetItemById(id);
             if (item == null)
             {
                 return NotFound();
@@ -61,15 +62,14 @@ namespace Item.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ItemReadDto> CreateItem(ItemCreateDto itemCreateDto)
+        public async Task<ActionResult<ItemReadDto>> CreateItem(ItemCreateDto itemCreateDto)
         {
             var itemModel = _mapper.Map<Model.Item>(itemCreateDto);
-            _repository.CreateItem(itemModel);
-            _repository.SaveChanges();
+            await _repository.CreateItem(itemModel);
 
             var itemReadDto = _mapper.Map<ItemReadDto>(itemModel);
 
-            return CreatedAtRoute(nameof(GetItemById), new { Id = itemReadDto.Id }, itemReadDto);
+            return CreatedAtRoute(nameof(GetItemById), new { Id = itemReadDto.new_id }, itemReadDto);
         }
     }
 

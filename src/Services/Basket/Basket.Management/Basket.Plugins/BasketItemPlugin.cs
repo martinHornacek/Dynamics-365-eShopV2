@@ -32,7 +32,9 @@ namespace BasketManagement.Basket.Plugins
         {
             if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity basketItem)
             {
-                var itemReference= basketItem.GetAttributeValue<EntityReference>("new_item");
+                var itemReference = basketItem.GetAttributeValue<EntityReference>("new_item");
+                if (itemReference == null) return;
+
                 var item = service.Retrieve(itemReference.LogicalName, itemReference.Id, new ColumnSet("new_price"));
 
                 var quantity = basketItem.GetAttributeValue<int>("new_quantity");
@@ -41,6 +43,7 @@ namespace BasketManagement.Basket.Plugins
                 decimal basketItemTotalValue = quantity * itemPrice;
 
                 var basketReference = basketItem.GetAttributeValue<EntityReference>("new_basket");
+                if (basketReference == null) return;
                 var basket = service.Retrieve(basketReference.LogicalName, basketReference.Id, new ColumnSet("new_totalvalue"));
                 
                 var basketTotalValue = basket.GetAttributeValue<decimal>("new_totalvalue");
@@ -65,6 +68,7 @@ namespace BasketManagement.Basket.Plugins
                 var basketItemPostImage = context.PostEntityImages["PostImage"] as Entity;
 
                 var itemReference = basketItemPostImage.GetAttributeValue<EntityReference>("new_item");
+                if (itemReference == null) return;
                 var item = service.Retrieve(itemReference.LogicalName, itemReference.Id, new ColumnSet("new_price"));
 
                 var preQuantity = basketItemPreImage.GetAttributeValue<int>("new_quantity");
@@ -75,6 +79,7 @@ namespace BasketManagement.Basket.Plugins
                 decimal postBasketItemTotalValue = postQuantity * itemPrice;
 
                 var basketReference = basketItemPostImage.GetAttributeValue<EntityReference>("new_basket");
+                if (basketReference == null) return;
                 var basket = service.Retrieve(basketReference.LogicalName, basketReference.Id, new ColumnSet("new_totalvalue"));
 
                 var preBasketTotalValue = basket.GetAttributeValue<decimal>("new_totalvalue");
@@ -98,6 +103,7 @@ namespace BasketManagement.Basket.Plugins
                 var basketItemPreImage = context.PreEntityImages["PreImage"] as Entity;
 
                 var itemReference = basketItemPreImage.GetAttributeValue<EntityReference>("new_item");
+                if (itemReference == null) return;
                 var item = service.Retrieve(itemReference.LogicalName, itemReference.Id, new ColumnSet("new_price"));
 
                 var quantity = basketItemPreImage.GetAttributeValue<int>("new_quantity");
@@ -106,6 +112,7 @@ namespace BasketManagement.Basket.Plugins
                 decimal basketItemTotalValue = quantity * itemPrice;
 
                 var basketReference = basketItemPreImage.GetAttributeValue<EntityReference>("new_basket");
+                if (basketReference == null) return;
                 var basket = service.Retrieve(basketReference.LogicalName, basketReference.Id, new ColumnSet("new_totalvalue"));
 
                 var oldBasketTotalValue = basket.GetAttributeValue<decimal>("new_totalvalue");
