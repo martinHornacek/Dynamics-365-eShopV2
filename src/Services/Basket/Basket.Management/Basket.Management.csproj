@@ -8,10 +8,26 @@
 
   <ItemGroup>
     <Folder Include="Basket.Domain\" />
+    <Folder Include="Basket.Domain\AggregatesModel\" />
+    <Folder Include="Basket.Domain\AggregatesModel\BasketAggregate\" />
+    <Folder Include="Basket.Domain\SeedWork\" />
+    <Folder Include="Basket.Domain\Exceptions\" />
+    <Folder Include="Basket.Infrastructure\" />
+    <Folder Include="Basket.Infrastructure\Repositories\" />
+    <Folder Include="Basket.Domain\Messaging\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.42" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Basket.Domain\AggregatesModel\" />
+    <None Remove="Basket.Domain\AggregatesModel\BasketAggregate\" />
+    <None Remove="Basket.Domain\SeedWork\" />
+    <None Remove="Basket.Domain\Exceptions\" />
+    <None Remove="Basket.Infrastructure\" />
+    <None Remove="Basket.Infrastructure\Repositories\" />
+    <None Remove="Basket.Domain\Messaging\" />
+  </ItemGroup>
 </Project>
