@@ -30,5 +30,22 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
 
             return new Item(item.new_name, item.new_id, item.new_price ?? 0m);
         }
+
+        public Item GetByItemId(string new_id)
+        {
+            var itemQuery = from i in _context.Items
+                            where i.new_id == new_id
+                            select new new_item
+                            {
+                                new_itemId = i.new_itemId,
+                                new_name = i.new_name,
+                                new_price = i.new_price,
+                                new_id = i.new_id
+                            };
+
+            var item = itemQuery.FirstOrDefault();
+
+            return new Item(item.new_name, item.new_id, item.new_price ?? 0m);
+        }
     }
 }

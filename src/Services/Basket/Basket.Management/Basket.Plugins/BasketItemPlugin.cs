@@ -4,7 +4,6 @@ using Basket.Management.Basket.Infrastructure;
 using Basket.Management.Basket.Infrastructure.Repositories;
 using CrmEarlyBound;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
 using System;
 
 namespace Basket.Management.Basket.Plugins
@@ -35,7 +34,7 @@ namespace Basket.Management.Basket.Plugins
                     PreOperationBasketItemCreateHandler(context, basketRepository, itemRepository);
                     break;
                 case "Update":
-                    PreOperationBasketItemUpdateHandler(context, basketRepository, itemRepository);
+                    PostOperationBasketItemUpdateHandler(context, basketRepository, itemRepository);
                     break;
                 case "Delete":
                     PreOperationBasketItemDeleteHandler(context, basketRepository, itemRepository);
@@ -67,28 +66,25 @@ namespace Basket.Management.Basket.Plugins
             basketRepository.Update(basket);
         }
 
-        private void PreOperationBasketItemUpdateHandler(IPluginExecutionContext context, IBasketRepository basketRepository, IItemRepository itemRepository)
+        private void PostOperationBasketItemUpdateHandler(IPluginExecutionContext context, IBasketRepository basketRepository, IItemRepository itemRepository)
         {
             if (!context.InputParameters.Contains("Target") || !(context.InputParameters["Target"] is Entity))
             {
                 return;
             }
 
-            var preImage = context.PreEntityImages["PreImage"] as Entity;
-            var target = context.InputParameters["Target"] as Entity;
+            var postImage = context.PostEntityImages["PostImage"] as Entity;
+            var basketItem = postImage.ToEntity<new_basketitem>();
 
-            var basketItem = preImage.ToEntity<new_basketitem>();
             if (basketItem.new_item == null || basketItem.new_basket == null)
             {
                 return;
             }
 
-            var updatedQuantity = target.GetAttributeValue<int?>("new_quantity");
-
             var item = itemRepository.GetById(basketItem.new_item.Id);
             var basket = basketRepository.GetById(basketItem.new_basket.Id);
 
-            basket.AddBasketItem(item.ItemId, item.Price, updatedQuantity ?? 0);
+            basket.AddBasketItem(item.ItemId, item.Price, basketItem.new_quantity ?? 0);
             basketRepository.Update(basket);
         }
 

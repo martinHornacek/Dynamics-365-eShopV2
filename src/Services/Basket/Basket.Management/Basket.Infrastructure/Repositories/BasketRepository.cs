@@ -17,6 +17,10 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
         public void Update(Domain.AggregatesModel.BasketAggregate.Basket basket)
         {
             _context.UpdateObject(basket.new_basket);
+            foreach (var item in basket.new_basketitems)
+            {
+                _context.UpdateObject(item);
+            }
         }
 
         public Domain.AggregatesModel.BasketAggregate.Basket GetById(Guid basketId)
@@ -43,6 +47,33 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
                                 .ToList();
 
             return new Domain.AggregatesModel.BasketAggregate.Basket(basket, basketItems, items);
+        }
+
+        public Domain.AggregatesModel.BasketAggregate.Basket GetByBasketId(string new_basketid)
+        {
+            var basket = _context.Baskets
+                                .Where(b => b.new_id == new_basketid)
+                                .Select(b => new new_basket { new_basketId = b.Id })
+                                .First();
+
+
+            var basketItems = _context.BasketItems
+                                      .Where(bi => bi.new_basket.Id == basket.Id)
+                                      .Select(bi => new new_basketitem
+                                      {
+                                          new_basketitemId = bi.new_basketitemId,
+                                          new_basketid = bi.new_basketid,
+                                          new_itemid = bi.new_itemid,
+                                          new_quantity = bi.new_quantity,
+                                          new_item = bi.new_item
+                                      }).ToList();
+
+            var items = _context.Items
+                                .Select(i => new new_item { new_itemId = i.new_itemId, new_price = i.new_price })
+                                .ToList();
+
+            return new Domain.AggregatesModel.BasketAggregate.Basket(basket, basketItems, items);
+
         }
     }
 }

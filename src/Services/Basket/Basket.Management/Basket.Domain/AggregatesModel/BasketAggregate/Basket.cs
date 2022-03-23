@@ -8,8 +8,8 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
     public class Basket : DomainEntity, IAggregateRoot
     {
         public new_basket new_basket { get; }
-        private List<new_basketitem> _new_basketitems { get; }
-        private List<new_item> _new_items { get; }
+        public List<new_basketitem> new_basketitems { get; }
+        public List<new_item> new_items { get; }
 
         private readonly List<BasketItem> _basketItems = new List<BasketItem>();
         public IReadOnlyCollection<BasketItem> BasketItems => _basketItems;
@@ -31,8 +31,8 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
         public Basket(new_basket new_basket, List<new_basketitem> basketItems, List<new_item> items)
         {
             this.new_basket = new_basket;
-            this._new_basketitems = basketItems;
-            this._new_items = items;
+            this.new_basketitems = basketItems;
+            this.new_items = items;
 
             foreach (var bi in basketItems)
             {

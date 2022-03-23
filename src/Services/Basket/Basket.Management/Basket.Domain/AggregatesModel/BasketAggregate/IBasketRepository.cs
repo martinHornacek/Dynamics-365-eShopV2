@@ -8,5 +8,7 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
         void Update(Basket basket);
 
         Basket GetById(Guid basketId);
+
+        Basket GetByBasketId(string new_basketid);
     }
 }
