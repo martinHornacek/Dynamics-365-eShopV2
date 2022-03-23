@@ -1,132 +1,116 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate;
+using Basket.Management.Basket.Domain.AggregatesModel.ItemAggregate;
+using Basket.Management.Basket.Infrastructure;
+using Basket.Management.Basket.Infrastructure.Repositories;
+using CrmEarlyBound;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 
-namespace BasketManagement.Basket.Plugins
+namespace Basket.Management.Basket.Plugins
 {
     public class BasketItemPlugin : IPlugin
     {
         public void Execute(IServiceProvider serviceProvider)
         {
             var context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
-            if (context.PrimaryEntityName != "new_basketitem") return;
+
+            if (context.PrimaryEntityName != new_basketitem.EntityLogicalName)
+            {
+                return;
+            }
 
             var serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             var service = serviceFactory.CreateOrganizationService(context.UserId);
 
+            var basketContext = new BasketContext(service);
+            var basketRepository = new BasketRepository(basketContext);
+
+            var itemContext = new ItemContext(service);
+            var itemRepository = new ItemRepository(itemContext);
+
             switch (context.MessageName)
             {
                 case "Create":
-                    PostOperationBasketItemCreateHandler(context, service);
+                    PreOperationBasketItemCreateHandler(context, basketRepository, itemRepository);
                     break;
                 case "Update":
-                    PostOperationBasketItemUpdateHandler(context, service);
+                    PreOperationBasketItemUpdateHandler(context, basketRepository, itemRepository);
                     break;
                 case "Delete":
-                    PostOperationBasketItemDeleteHandler(context, service);
+                    PreOperationBasketItemDeleteHandler(context, basketRepository, itemRepository);
                     break;
             }
+
+            basketContext.SaveChanges();
         }
 
-        private void PostOperationBasketItemCreateHandler(IPluginExecutionContext context, IOrganizationService service)
+        private void PreOperationBasketItemCreateHandler(IPluginExecutionContext context, IBasketRepository basketRepository, IItemRepository itemRepository)
         {
-            if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity basketItem)
+            if (!context.InputParameters.Contains("Target") || !(context.InputParameters["Target"] is Entity))
             {
-                var itemReference = basketItem.GetAttributeValue<EntityReference>("new_item");
-                if (itemReference == null) return;
-
-                var item = service.Retrieve(itemReference.LogicalName, itemReference.Id, new ColumnSet("new_price"));
-
-                var quantity = basketItem.GetAttributeValue<int>("new_quantity");
-                var itemPrice = item.GetAttributeValue<decimal>("new_price");
-
-                decimal basketItemTotalValue = quantity * itemPrice;
-
-                var basketReference = basketItem.GetAttributeValue<EntityReference>("new_basket");
-                if (basketReference == null) return;
-                var basket = service.Retrieve(basketReference.LogicalName, basketReference.Id, new ColumnSet("new_totalvalue"));
-                
-                var basketTotalValue = basket.GetAttributeValue<decimal>("new_totalvalue");
-
-                service.Update(new Entity
-                {
-                    LogicalName = basketReference.LogicalName,
-                    Id = basketReference.Id,
-                    Attributes =
-                    {
-                        ["new_totalvalue"] = basketTotalValue + basketItemTotalValue
-                    }
-                });
+                return;
             }
+
+            var target = context.InputParameters["Target"] as Entity;
+            var basketItem = target.ToEntity<new_basketitem>();
+
+            if (basketItem.new_item == null || basketItem.new_basket == null)
+            {
+                return;
+            }
+
+            var item = itemRepository.GetById(basketItem.new_item.Id);
+            var basket = basketRepository.GetById(basketItem.new_basket.Id);
+
+            basket.AddBasketItem(item.ItemId, item.Price, basketItem.new_quantity ?? 0);
+            basketRepository.Update(basket);
         }
 
-        private void PostOperationBasketItemUpdateHandler(IPluginExecutionContext context, IOrganizationService service)
+        private void PreOperationBasketItemUpdateHandler(IPluginExecutionContext context, IBasketRepository basketRepository, IItemRepository itemRepository)
         {
-            if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity basketItem)
+            if (!context.InputParameters.Contains("Target") || !(context.InputParameters["Target"] is Entity))
             {
-                var basketItemPreImage = context.PreEntityImages["PreImage"] as Entity;
-                var basketItemPostImage = context.PostEntityImages["PostImage"] as Entity;
-
-                var itemReference = basketItemPostImage.GetAttributeValue<EntityReference>("new_item");
-                if (itemReference == null) return;
-                var item = service.Retrieve(itemReference.LogicalName, itemReference.Id, new ColumnSet("new_price"));
-
-                var preQuantity = basketItemPreImage.GetAttributeValue<int>("new_quantity");
-                var postQuantity = basketItemPostImage.GetAttributeValue<int>("new_quantity");
-                var itemPrice = item.GetAttributeValue<decimal>("new_price");
-
-                decimal preBasketItemTotalValue = preQuantity * itemPrice;
-                decimal postBasketItemTotalValue = postQuantity * itemPrice;
-
-                var basketReference = basketItemPostImage.GetAttributeValue<EntityReference>("new_basket");
-                if (basketReference == null) return;
-                var basket = service.Retrieve(basketReference.LogicalName, basketReference.Id, new ColumnSet("new_totalvalue"));
-
-                var preBasketTotalValue = basket.GetAttributeValue<decimal>("new_totalvalue");
-
-                service.Update(new Entity
-                {
-                    LogicalName = basketReference.LogicalName,
-                    Id = basketReference.Id,
-                    Attributes =
-                    {
-                        ["new_totalvalue"] = preBasketTotalValue - preBasketItemTotalValue + postBasketItemTotalValue
-                    }
-                });
+                return;
             }
+
+            var preImage = context.PreEntityImages["PreImage"] as Entity;
+            var target = context.InputParameters["Target"] as Entity;
+
+            var basketItem = preImage.ToEntity<new_basketitem>();
+            if (basketItem.new_item == null || basketItem.new_basket == null)
+            {
+                return;
+            }
+
+            var updatedQuantity = target.GetAttributeValue<int?>("new_quantity");
+
+            var item = itemRepository.GetById(basketItem.new_item.Id);
+            var basket = basketRepository.GetById(basketItem.new_basket.Id);
+
+            basket.AddBasketItem(item.ItemId, item.Price, updatedQuantity ?? 0);
+            basketRepository.Update(basket);
         }
 
-        private void PostOperationBasketItemDeleteHandler(IPluginExecutionContext context, IOrganizationService service)
+        private void PreOperationBasketItemDeleteHandler(IPluginExecutionContext context, IBasketRepository basketRepository, IItemRepository itemRepository)
         {
-            if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is EntityReference basketItemReference)
+            if (!context.InputParameters.Contains("Target") || !(context.InputParameters["Target"] is EntityReference))
             {
-                var basketItemPreImage = context.PreEntityImages["PreImage"] as Entity;
-
-                var itemReference = basketItemPreImage.GetAttributeValue<EntityReference>("new_item");
-                if (itemReference == null) return;
-                var item = service.Retrieve(itemReference.LogicalName, itemReference.Id, new ColumnSet("new_price"));
-
-                var quantity = basketItemPreImage.GetAttributeValue<int>("new_quantity");
-                var itemPrice = item.GetAttributeValue<decimal>("new_price");
-
-                decimal basketItemTotalValue = quantity * itemPrice;
-
-                var basketReference = basketItemPreImage.GetAttributeValue<EntityReference>("new_basket");
-                if (basketReference == null) return;
-                var basket = service.Retrieve(basketReference.LogicalName, basketReference.Id, new ColumnSet("new_totalvalue"));
-
-                var oldBasketTotalValue = basket.GetAttributeValue<decimal>("new_totalvalue");
-
-                service.Update(new Entity
-                {
-                    LogicalName = basketReference.LogicalName,
-                    Id = basketReference.Id,
-                    Attributes =
-                    {
-                        ["new_totalvalue"] = oldBasketTotalValue - basketItemTotalValue
-                    }
-                });
+                return;
             }
+
+            var preImage = context.PreEntityImages["PreImage"] as Entity;
+            var basketItem = preImage.ToEntity<new_basketitem>();
+
+            if (basketItem.new_item == null || basketItem.new_basket == null)
+            {
+                return;
+            }
+
+            var basket = basketRepository.GetById(basketItem.new_basket.Id);
+
+            basket.RemoveBasketItem(basketItem.new_itemid);
+            basketRepository.Update(basket);
         }
     }
 }

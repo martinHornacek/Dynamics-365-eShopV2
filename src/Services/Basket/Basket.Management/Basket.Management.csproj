@@ -7,13 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Basket.Domain\" />
-    <Folder Include="Basket.Domain\AggregatesModel\" />
     <Folder Include="Basket.Domain\AggregatesModel\BasketAggregate\" />
     <Folder Include="Basket.Domain\SeedWork\" />
     <Folder Include="Basket.Domain\Exceptions\" />
-    <Folder Include="Basket.Infrastructure\" />
-    <Folder Include="Basket.Infrastructure\Repositories\" />
     <Folder Include="Basket.Domain\Messaging\" />
   </ItemGroup>
 

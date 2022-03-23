@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate;
+using CrmEarlyBound;
 
 namespace Basket.Management.Basket.Infrastructure.Repositories
 {
@@ -12,30 +14,35 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
             _context = context;
         }
 
-        public void Add(Domain.AggregatesModel.BasketAggregate.Basket basket)
-        {
-            _context.AddObject(basket);
-        }
-
         public void Update(Domain.AggregatesModel.BasketAggregate.Basket basket)
         {
-            _context.UpdateObject(basket);
-        }
-
-        public void Delete(Domain.AggregatesModel.BasketAggregate.Basket basket)
-        {
-            _context.DeleteObject(basket);
+            _context.UpdateObject(basket.new_basket);
         }
 
         public Domain.AggregatesModel.BasketAggregate.Basket GetById(Guid basketId)
         {
-            // TODO
-            //var basket = from b in _context.BasketSet
-            //             where b.Id == basketId
-            //             select b;
-            //return basket;
-            return Domain.AggregatesModel.BasketAggregate.Basket.New();
-        }
+              var basket = _context.Baskets
+                                 .Where(b => b.new_basketId == basketId)
+                                 .Select(b => new new_basket { new_basketId = b.Id })
+                                 .First();
 
+            
+            var basketItems = _context.BasketItems
+                                      .Where(bi => bi.new_basket.Id == basketId)
+                                      .Select(bi => new new_basketitem
+                                       {
+                                           new_basketitemId = bi.new_basketitemId,
+                                           new_basketid = bi.new_basketid,
+                                           new_itemid = bi.new_itemid,
+                                           new_quantity = bi.new_quantity,
+                                           new_item = bi.new_item
+                                       }).ToList();
+
+            var items = _context.Items
+                                .Select(i => new new_item { new_itemId = i.new_itemId, new_price = i.new_price })
+                                .ToList();
+
+            return new Domain.AggregatesModel.BasketAggregate.Basket(basket, basketItems, items);
+        }
     }
 }

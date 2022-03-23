@@ -5,49 +5,36 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
 {
     public class BasketItem : DomainEntity
     {
-        private string _itemName;
-        private decimal _itemPrice;
+        private readonly decimal _price;
+        private readonly string _itemId;
         private int _quantity;
 
-        public string ItemId { get; private set; }
-
-        protected BasketItem() { }
-
-        public BasketItem(string itemId, string itemName, decimal itemPrice, int quantity = 1)
+        public BasketItem(string itemId, decimal price, int quantity)
         {
             if (quantity <= 0)
             {
                 throw new BasketDomainException("Invalid quantity");
             }
 
-            ItemId = itemId;
-
-            _itemName = itemName;
-            _itemPrice = itemPrice;
+            _price = price;
+            _itemId = itemId;
             _quantity = quantity;
         }
 
+        public decimal GetItemPrice() => _price;
 
-        public int GetQuantity()
-        {
-            return _quantity;
-        }
+        public string GetItemId() => _itemId;
+        
+        public int GetQuantity() => _quantity;
 
-        public decimal GetItemPrice()
-        {
-            return _itemPrice;
-        }
-
-        public string GetBasketItemItemName() => _itemName;
-
-        public void IncreaseQuantity(int quantity)
+        public void UpdateQuantity(int quantity)
         {
             if (quantity < 0)
             {
                 throw new BasketDomainException("Invalid quantity");
             }
 
-            _quantity += quantity;
+            _quantity = quantity;
         }
     }
 }
