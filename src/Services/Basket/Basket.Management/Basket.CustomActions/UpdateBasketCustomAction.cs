@@ -50,7 +50,7 @@ namespace Basket.Management.Basket.CustomActions
                 }
 
                 basketRepository.Update(basket);
-                basketContext.SaveChanges();
+                basketContext.SaveEntities();
             }
         }
 

@@ -41,7 +41,7 @@ namespace Basket.Management.Basket.Plugins
                     break;
             }
 
-            basketContext.SaveChanges();
+            basketContext.SaveEntities();
         }
 
         private void PreOperationBasketItemCreateHandler(IPluginExecutionContext context, IBasketRepository basketRepository, IItemRepository itemRepository)
