@@ -17,10 +17,6 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
         public void Update(Domain.AggregatesModel.BasketAggregate.Basket basket)
         {
             _context.UpdateObject(basket.new_basket);
-            foreach (var item in basket.new_basketitems)
-            {
-                _context.UpdateObject(item);
-            }
         }
 
         public Domain.AggregatesModel.BasketAggregate.Basket GetById(Guid basketId)
