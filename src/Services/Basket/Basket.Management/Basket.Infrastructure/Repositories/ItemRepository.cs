@@ -1,4 +1,6 @@
 ﻿using Basket.Management.Basket.Domain.AggregatesModel.ItemAggregate;
+using Basket.Management.Basket.Infrastructure.Contexts;
+using Basket.Management.Basket.Infrastructure.Mappers;
 using CrmEarlyBound;
 using System;
 using System.Linq;
@@ -14,21 +16,20 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
             _context = context;
         }
 
-        public Item GetById(Guid itemId)
+        public Item GetById(Guid id)
         {
             var itemQuery = from i in _context.Items
-                            where i.Id == itemId
+                            where i.Id == id
                             select new new_item
                             {
                                 new_itemId = i.new_itemId,
+                                new_id = i.new_id,
                                 new_name = i.new_name,
                                 new_price = i.new_price,
-                                new_id = i.new_id
                             };
                        
-            var item = itemQuery.FirstOrDefault();
-
-            return new Item(item.new_name, item.new_id, item.new_price ?? 0m);
+            var new_item = itemQuery.FirstOrDefault();
+            return ItemMapper.ToItem(new_item);
         }
 
         public Item GetByItemId(string new_id)
@@ -38,14 +39,19 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
                             select new new_item
                             {
                                 new_itemId = i.new_itemId,
+                                new_id = i.new_id,
                                 new_name = i.new_name,
                                 new_price = i.new_price,
-                                new_id = i.new_id
                             };
 
-            var item = itemQuery.FirstOrDefault();
+            var new_item = itemQuery.FirstOrDefault();
+            return ItemMapper.ToItem(new_item);
+        }
 
-            return new Item(item.new_name, item.new_id, item.new_price ?? 0m);
+        public bool SaveEntities()
+        {
+            var result = _context.SaveChanges();
+            return true;
         }
     }
 }

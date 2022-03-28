@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Basket.Management.Basket.Domain.Messaging;
-using Microsoft.Xrm.Sdk;
 
 namespace Basket.Management.Basket.Domain.SeedWork
 {
-    public abstract class DomainEntity : Entity
+    public abstract class DomainEntity
     {
         private List<INotification> _domainEvents;
         public IReadOnlyCollection<INotification> DomainEvents => _domainEvents?.AsReadOnly();

@@ -4,9 +4,9 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.ItemAggregate
 {
     public class Item : DomainEntity, IAggregateRoot
     {
-        private string _name;
-        private decimal _price;
-        private string _itemId;
+        private readonly string _name;
+        private readonly decimal _price;
+        private readonly string _itemId;
 
         public string Name
         {
@@ -32,11 +32,11 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.ItemAggregate
             }
         }
 
-        public Item(string name, string id, decimal price)
+        public Item(string id, string name, decimal price)
         {
+            _itemId = id;
             _name = name;
             _price = price;
-            _itemId = id;
         }
     }
 }

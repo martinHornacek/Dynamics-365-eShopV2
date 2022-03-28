@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Basket.Management.Basket.Domain.Exceptions
 {
     public class BasketDomainException : Exception

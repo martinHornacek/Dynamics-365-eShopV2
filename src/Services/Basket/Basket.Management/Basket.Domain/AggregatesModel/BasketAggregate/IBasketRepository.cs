@@ -7,8 +7,10 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
     {
         void Update(Basket basket);
 
-        Basket GetById(Guid basketId);
+        Basket GetById(Guid id);
 
-        Basket GetByBasketId(string new_basketid);
+        Basket GetByBasketId(string new_id);
+
+        bool SaveEntities();
     }
 }

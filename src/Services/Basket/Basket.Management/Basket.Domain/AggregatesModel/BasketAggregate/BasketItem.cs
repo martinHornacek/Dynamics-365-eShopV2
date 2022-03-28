@@ -1,40 +1,37 @@
-﻿using Basket.Management.Basket.Domain.Exceptions;
+﻿using Basket.Management.Basket.Domain.AggregatesModel.ItemAggregate;
+using Basket.Management.Basket.Domain.Exceptions;
 using Basket.Management.Basket.Domain.SeedWork;
 
 namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
 {
     public class BasketItem : DomainEntity
     {
-        private readonly decimal _price;
-        private readonly string _itemId;
+        private readonly Item _item;
         private int _quantity;
 
-        public BasketItem(string itemId, decimal price, int quantity)
+        public BasketItem(Item item, int quantity)
         {
-            if (quantity <= 0)
-            {
-                throw new BasketDomainException("Invalid quantity");
-            }
+            if (quantity <= 0) throw new BasketDomainException("Invalid quantity");
 
-            _price = price;
-            _itemId = itemId;
+            _item = item;
             _quantity = quantity;
         }
 
-        public decimal GetItemPrice() => _price;
+        public decimal Price => Item.Price;
 
-        public string GetItemId() => _itemId;
-        
-        public int GetQuantity() => _quantity;
+        public Item Item => _item;
 
-        public void UpdateQuantity(int quantity)
+        public int Quantity
         {
-            if (quantity < 0)
+            get
             {
-                throw new BasketDomainException("Invalid quantity");
+                return _quantity;
             }
-
-            _quantity = quantity;
+            set
+            {
+                if (value < 0) throw new BasketDomainException("Invalid quantity");
+                _quantity = value;
+            }
         }
     }
 }

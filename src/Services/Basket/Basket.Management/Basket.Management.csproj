@@ -8,9 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Basket.Domain\AggregatesModel\BasketAggregate\" />
-    <Folder Include="Basket.Domain\SeedWork\" />
     <Folder Include="Basket.Domain\Exceptions\" />
-    <Folder Include="Basket.Domain\Messaging\" />
   </ItemGroup>
 
   <ItemGroup>
