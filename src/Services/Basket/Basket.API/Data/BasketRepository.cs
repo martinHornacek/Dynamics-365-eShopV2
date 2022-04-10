@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Basket.API.Data
 {
@@ -22,15 +23,20 @@ namespace Basket.API.Data
             _context = context;
         }
 
-        public async Task AddBasketItem(BasketItemCreateDto basketItem)
+        public async Task AddBasketItem(BasketItemDto basketItem)
         {
             if (basketItem == null)
             {
                 throw new ArgumentNullException(nameof(basketItem));
             }
 
-            var payload = JsonConvert.SerializeObject(basketItem);
-            await PostAsync("new_basketitems", payload);
+            var @event = new BasketEvent
+            {
+                EventName = "UpsertBasketItem",
+                EventArgument = basketItem
+            };
+
+            await PostAsync("new_UpdateBasket", $"{{ payload: \"{HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(@event))}\"}}");
         }
 
         public async Task CreateBasket(Model.Basket basket)
@@ -49,7 +55,7 @@ namespace Basket.API.Data
             var basketItems = await this.GetAllBasketItemsForBasket(basketId);
             foreach (var basketItem in basketItems)
             {
-                await RemoveBasketItem(basketItem.new_basketitemid);
+                await RemoveBasketItem(basketItem.new_basketid, basketItem.new_itemid);
             }
         }
 
@@ -61,9 +67,9 @@ namespace Basket.API.Data
             return basketItems;
         }
 
-        public async Task<BasketItem> GetBasketItemForBasket(string basketId, string basketItemId)
+        public async Task<BasketItem> GetBasketItemForBasket(string basketId, string itemId)
         {
-            var responseJson = await GetStringAsync($"new_basketitems?$select=new_name,new_id,new_itemid,new_basketid,new_quantity&$filter=new_basketid eq '{basketId}' and new_id eq '{basketItemId}'");
+            var responseJson = await GetStringAsync($"new_basketitems?$select=new_name,new_id,new_itemid,new_basketid,new_quantity&$filter=new_basketid eq '{basketId}' and new_itemid eq '{itemId}'");
             ODataResponse<BasketItem> oDataResponse = JsonConvert.DeserializeObject<ODataResponse<BasketItem>>(responseJson);
             var basketItem = oDataResponse.Value.FirstOrDefault();
             return basketItem;
@@ -85,10 +91,19 @@ namespace Basket.API.Data
             return basket;
         }
 
-        public async Task RemoveBasketItem(string basketItemIdentifier)
+        public async Task RemoveBasketItem(string basketid, string itemid)
         {
-            var url = $"new_basketitems({basketItemIdentifier})";
-            await DeleteAsync(url);
+            var @event = new BasketEvent
+            {
+                EventName = "DeleteBasketItem",
+                EventArgument = new BasketItemDto
+                {
+                    new_basketid = basketid,
+                    new_itemid = itemid
+                }
+            };
+
+            await PostAsync("new_UpdateBasket", $"{{ payload: \"{HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(@event))}\"}}");
         }
 
         private Task<string> GetStringAsync(string url)
@@ -110,16 +125,6 @@ namespace Basket.API.Data
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var content = new StringContent(payload, Encoding.UTF8, "application/json");
             return httpClient.PostAsync(url, content);
-        }
-
-        private Task<HttpResponseMessage> DeleteAsync(string url)
-        {
-            var uri = new Uri(baseUrl);
-            var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };
-            var handler = new HttpClientHandler { Credentials = credentialsCache };
-            var httpClient = new HttpClient(handler) { BaseAddress = uri, Timeout = new TimeSpan(0, 0, 10) };
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            return httpClient.DeleteAsync(url);
         }
     }
 }

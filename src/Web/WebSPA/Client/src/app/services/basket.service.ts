@@ -30,14 +30,22 @@ export class BasketService {
 
   addItemToBasket(item: Item, quantity: number): Observable<BasketItem> {
     const url = `${this.basketsUrl}/${this.basket.new_id}/basketitems`;
-    const payload =  { new_name: item.new_name, new_id: String(Math.floor(Math.random() * 100)), new_itemid: item.new_id, new_quantity: quantity, new_basketid: this.basket.new_id };
+    const payload =  { new_itemid: item.new_id, new_quantity: quantity, new_basketid: this.basket.new_id };
     return this.http.post<BasketItem>(url, payload)
       .pipe(catchError(this.handleError<BasketItem>(`addItem/${this.basket.new_id}`, { new_id: "0", new_item: { new_id: "0", new_price: 0, new_name: "", new_category: "", new_description: "" } as Item, new_quantity: 0} as BasketItem )));
   }
 
-  removeItemFromBasket(basketItemId: string): Observable<unknown> {
+  updateItemInBasket(item: Item, quantity: number): Observable<BasketItem> {
     const url = `${this.basketsUrl}/${this.basket.new_id}/basketitems`;
-    return this.http.delete(url, { body: { new_id: basketItemId } })
+    const payload =  { new_itemid: item.new_id, new_quantity: quantity, new_basketid: this.basket.new_id };
+    return this.http.post<BasketItem>(url, payload)
+      .pipe(catchError(this.handleError<BasketItem>(`addItem/${this.basket.new_id}`, { new_id: "0", new_item: { new_id: "0", new_price: 0, new_name: "", new_category: "", new_description: "" } as Item, new_quantity: 0} as BasketItem )));
+  }
+
+  removeItemFromBasket(item: Item): Observable<unknown> {
+    const url = `${this.basketsUrl}/${this.basket.new_id}/basketitems`;
+    const payload =  { new_itemid: item.new_id, new_basketid: this.basket.new_id };
+    return this.http.delete(url, { body: payload })
       .pipe(catchError(this.handleError(`removeItem/${this.basket.new_id}`)));
   }
 

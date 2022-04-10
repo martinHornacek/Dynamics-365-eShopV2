@@ -12,9 +12,9 @@
     <td><a routerLink="/items/{{item.new_item.new_id}}"><img src="/assets/angular-icon.svg" width="70px"/></a></td>
     <td><a routerLink="/items/{{item.new_item.new_id}}">{{item.new_item.new_name}}</a></td>
     <td><a routerLink="/items/{{item.new_item.new_id}}">{{item.new_item.new_price}}</a></td>
-    <td><input type="number" [(ngModel)]="item.new_quantity" size="2" id="quantity"/></td>
+    <td><input type="number" [ngModel]="item.new_quantity" (ngModelChange)="updateItemInBasket(item.new_item, $event)" size="2" id="quantity"/></td>
     <td><a routerLink="/items/{{item.new_item.new_id}}">{{item.new_item.new_price * item.new_quantity}}</a></td>
-    <td><input type="button" (click)="removeFromBasket(item.new_id)" id="remove" value="Remove"/></td>
+    <td><input type="button" (click)="removeFromBasket(item.new_item)" id="remove" value="Remove"/></td>
   </tr>
   <tr>
     <td colspan="4">&nbsp;</td>

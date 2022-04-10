@@ -31,14 +31,21 @@ export class ItemDetailsComponent implements OnInit {
   }
 
   addToBasket(): void {
-    // TODO handle increase of quantity if item already exists
-    // by initiating updateItemInBasket action (not implemented)
+    const index = this.basketService.basket.basketItems.findIndex((bi) => bi.new_item.new_id === this.item.new_id);
 
-    this.basketService.addItemToBasket(this.item, 1)
+    if (index !== -1) {
+      const quantity = this.basketService.basket.basketItems[index].new_quantity;
+      this.basketService.updateItemInBasket(this.item, quantity + 1)
+      .subscribe(_ => {
+        this.basketService.basket.basketItems[index].new_quantity = (quantity + 1);
+      });
+    } else {
+      this.basketService.addItemToBasket(this.item, 1)
       .subscribe((basketItem) => {
         basketItem.new_item = this.item; // update the returned basket item object with item ref
         this.basketService.basket.basketItems.push(basketItem) 
       });
+    }
 
     this.router.navigate(['/basket']);
   }

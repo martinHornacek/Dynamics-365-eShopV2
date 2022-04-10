@@ -17,7 +17,7 @@ namespace Basket.Management.Basket.Infrastructure.Mappers
         public Item ToItem(new_item new_item)
         {
             var item = new Item(new_item.new_id, new_item.new_name, new_item.new_price ?? 0m);
-            _mappingDictionary.Add(item, new_item);
+            _mappingDictionary[item] = new_item;
             return item;
         }
 

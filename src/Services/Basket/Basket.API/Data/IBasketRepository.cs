@@ -6,11 +6,10 @@ namespace Basket.API.Data
 {
     public interface IBasketRepository
     {
-
         Task<IEnumerable<Model.BasketItem>> GetAllBasketItemsForBasket(string basketId);
-        Task<Model.BasketItem> GetBasketItemForBasket(string basketId, string basketItemId);
-        Task AddBasketItem(BasketItemCreateDto item);
-        Task RemoveBasketItem(string basketItemIdentifier);
+        Task<Model.BasketItem> GetBasketItemForBasket(string basketId, string itemId);
+        Task AddBasketItem(BasketItemDto item);
+        Task RemoveBasketItem(string basketid, string itemid);
 
         Task EmptyBasket(string basketId);
         Task<IEnumerable<Model.Basket>> GetAllBaskets();

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Item } from 'src/app/models/item';
 import { BasketService } from 'src/app/services/basket.service';
 
 @Component({
@@ -10,18 +11,28 @@ export class BasketComponent implements OnInit {
 
   constructor(public basketService: BasketService) { }
 
-  removeFromBasket(basketItemId: string) {
-    this.basketService.removeItemFromBasket(basketItemId)
+  removeFromBasket(item: Item) {
+    this.basketService.removeItemFromBasket(item)
       .subscribe(() => {
-        const index = this.basketService.basket.basketItems.findIndex(bi => bi.new_id == basketItemId);
+        const index = this.basketService.basket.basketItems.findIndex(basketItem => basketItem.new_item.new_id == item.new_id);
         if (index > -1) {
           this.basketService.basket.basketItems.splice(index, 1);
         }
       });
   }
 
+  updateItemInBasket(item: Item, quantity: number) {
+    this.basketService.updateItemInBasket(item, quantity)
+      .subscribe(_ => {
+        const index = this.basketService.basket.basketItems.findIndex((basketItem) => basketItem.new_item.new_id === item.new_id);
+        if (index > -1) {
+          this.basketService.basket.basketItems[index].new_quantity = quantity;
+        }
+      });
+  }
+
   emptyBasket() {
-    this.basketService.basket.basketItems.forEach(item => this.removeFromBasket(item.new_id));
+    this.basketService.basket.basketItems.forEach(item => this.removeFromBasket(item.new_item));
   }
 
   getTotalValue(): number {

@@ -21,7 +21,7 @@ namespace Basket.Management.Basket.Infrastructure.Mappers
             var item = _itemMapper.ToItem(new_item);
 
             var basketItem = new Domain.AggregatesModel.BasketAggregate.BasketItem(item, new_basketitem.new_quantity ?? 0);
-            _mappingDictionary.Add(basketItem, new_basketitem);
+            _mappingDictionary[basketItem] = new_basketitem;
 
             return basketItem;
         }

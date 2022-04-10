@@ -37,8 +37,7 @@ namespace Basket.Management.Basket.CustomActions
             BasketItem basketItem; bool exists;
             switch (@event.EventName)
             {
-                case "CreateBasketItem":
-                case "UpdateBasketItem":
+                case "UpsertBasketItem":
                     (exists, basketItem) = basket.AddBasketItem(item, basketItemDto.new_quantity ?? 0);
                     if (exists) basketRepository.UpdateBasketItem(basketItem);
                     if (!exists) basketRepository.CreateBasketItem(basket, basketItem);

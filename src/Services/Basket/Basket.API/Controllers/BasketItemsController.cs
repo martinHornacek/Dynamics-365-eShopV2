@@ -36,11 +36,11 @@ namespace Basket.API.Controllers
 
             var basketItems = await _repository.GetAllBasketItemsForBasket(basketId);
 
-            return Ok(_mapper.Map<IEnumerable<BasketItemReadDto>>(basketItems));
+            return Ok(_mapper.Map<IEnumerable<BasketItemDto>>(basketItems));
         }
 
         [HttpGet("{basketItemId}", Name = "GetBasketItemForBasket")]
-        public async Task<ActionResult<BasketItemReadDto>> GetBasketItemForBasket(string basketId, string basketItemId)
+        public async Task<ActionResult<BasketItemDto>> GetBasketItemForBasket(string basketId, string basketItemId)
         {
             Console.WriteLine($"--> Hit GetBasketItemForBasket: {basketId} / {basketItemId}");
 
@@ -56,11 +56,11 @@ namespace Basket.API.Controllers
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<BasketItemReadDto>(basketItem));
+            return Ok(_mapper.Map<BasketItemDto>(basketItem));
         }
 
         [HttpPost]
-        public async Task<ActionResult<BasketItemReadDto>> AddBasketItem(string basketId, BasketItemCreateDto basketItemDto)
+        public async Task<ActionResult<BasketItemDto>> AddBasketItem(string basketId, BasketItemDto basketItemDto)
         {
             Console.WriteLine($"--> Hit AddBasketItem: {basketId}");
 
@@ -74,22 +74,22 @@ namespace Basket.API.Controllers
             await _repository.AddBasketItem(basketItemDto);
             var basketItem = _mapper.Map<BasketItem>(basketItemDto);
 
-            return Ok(_mapper.Map<BasketItemReadDto>(basketItem));
+            return Ok(_mapper.Map<BasketItemDto>(basketItem));
         }
 
         [HttpDelete]
-        public async Task<ActionResult> RemoveBasketItem(string basketId, BasketItemDeleteDto basketItemDto)
+        public async Task<ActionResult> RemoveBasketItem(string basketId, BasketItemDto basketItemDto)
         {
             Console.WriteLine($"--> Hit RemoveBasketItem: {basketId}");
 
-            var basketItem = await _repository.GetBasketItemForBasket(basketId, basketItemDto.new_id);
+            var basketItem = await _repository.GetBasketItemForBasket(basketId, basketItemDto.new_itemid);
 
             if (basketItem == null)
             {
                 return NotFound();
             }
 
-            await _repository.RemoveBasketItem(basketItem.new_basketitemid);
+            await _repository.RemoveBasketItem(basketItem.new_basketid, basketItem.new_itemid);
 
             return Ok();
         }

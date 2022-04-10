@@ -9,9 +9,8 @@ namespace Basket.API.Profiles
         public BasketProfile()
         {
             // Source -> Target
-            CreateMap<BasketItemCreateDto, BasketItem>();
-            CreateMap<BasketItemDeleteDto, BasketItem>();
-            CreateMap<BasketItem, BasketItemReadDto>();
+            CreateMap<BasketItemDto, BasketItem>();
+            CreateMap<BasketItem, BasketItemDto>();
             CreateMap<BasketCreateDto, Model.Basket>();
             CreateMap<Model.Basket, BasketReadDto>();
         }
