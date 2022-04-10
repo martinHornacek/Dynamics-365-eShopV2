@@ -19,7 +19,7 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
             _basketItems.AddRange(basketItems);
         }
 
-        public void AddBasketItem(Item item, int quantity)
+        public (bool, BasketItem) AddBasketItem(Item item, int quantity)
         {
             var existingBasketItem = _basketItems.Where(bi => bi.Item.ItemId == item.ItemId).SingleOrDefault();
 
@@ -27,15 +27,18 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
             {
                 existingBasketItem.Quantity = quantity;
                 this.RecalculateTotalValue();
+                return (true, existingBasketItem);
             }
             else
             {
-                _basketItems.Add(new BasketItem(item, quantity));
+                var basketItem = new BasketItem(item, quantity);
+                _basketItems.Add(basketItem);
                 this.RecalculateTotalValue();
+                return (false, basketItem);
             }
         }
 
-        public void RemoveBasketItem(string itemId)
+        public BasketItem RemoveBasketItem(string itemId)
         {
             var existingBasketItem = _basketItems.Where(bi => bi.Item.ItemId == itemId).SingleOrDefault();
 
@@ -44,11 +47,31 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
                 _basketItems.Remove(existingBasketItem);
                 this.RecalculateTotalValue();
             }
+
+            return existingBasketItem;
         }
 
         public void RecalculateTotalValue()
         {
             TotalValue = _basketItems.Sum(bi => bi.Quantity * bi.Price);
+        }
+
+        public override bool Equals(object obj)
+        {
+            // If the passed object is null
+            if (obj == null)
+            {
+                return false;
+            }
+            if (!(obj is Basket))
+            {
+                return false;
+            }
+            return (this.Name == ((Basket)obj).Name);
+        }
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
         }
     }
 }

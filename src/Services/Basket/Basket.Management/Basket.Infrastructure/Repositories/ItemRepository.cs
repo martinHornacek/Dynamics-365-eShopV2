@@ -9,11 +9,13 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
 {
     public class ItemRepository : IItemRepository
     {
-        private readonly ItemContext _context;
+        private readonly BasketContext _context;
+        private readonly ItemMapper _itemMapper;
 
-        public ItemRepository(ItemContext context)
+        public ItemRepository(BasketContext context, ItemMapper itemMapper)
         {
             _context = context;
+            _itemMapper = itemMapper;
         }
 
         public Item GetById(Guid id)
@@ -29,7 +31,7 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
                             };
                        
             var new_item = itemQuery.FirstOrDefault();
-            return ItemMapper.ToItem(new_item);
+            return _itemMapper.ToItem(new_item);
         }
 
         public Item GetByItemId(string new_id)
@@ -45,7 +47,7 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
                             };
 
             var new_item = itemQuery.FirstOrDefault();
-            return ItemMapper.ToItem(new_item);
+            return _itemMapper.ToItem(new_item);
         }
 
         public bool SaveEntities()

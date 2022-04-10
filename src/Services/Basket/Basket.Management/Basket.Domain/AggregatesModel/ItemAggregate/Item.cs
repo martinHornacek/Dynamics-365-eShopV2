@@ -38,5 +38,23 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.ItemAggregate
             _name = name;
             _price = price;
         }
+
+        public override bool Equals(object obj)
+        {
+            // If the passed object is null
+            if (obj == null)
+            {
+                return false;
+            }
+            if (!(obj is Item))
+            {
+                return false;
+            }
+            return (this.ItemId == ((Item)obj).ItemId);
+        }
+        public override int GetHashCode()
+        {
+            return ItemId.GetHashCode();
+        }
     }
 }

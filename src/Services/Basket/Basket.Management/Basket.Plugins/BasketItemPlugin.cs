@@ -1,6 +1,7 @@
 ﻿using Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate;
 using Basket.Management.Basket.Domain.AggregatesModel.ItemAggregate;
 using Basket.Management.Basket.Infrastructure.Contexts;
+using Basket.Management.Basket.Infrastructure.Mappers;
 using Basket.Management.Basket.Infrastructure.Repositories;
 using CrmEarlyBound;
 using Microsoft.Xrm.Sdk;
@@ -18,8 +19,14 @@ namespace Basket.Management.Basket.Plugins
             var serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             var service = serviceFactory.CreateOrganizationService(context.UserId);
 
-            var basketRepository = new BasketRepository(new BasketContext(service));
-            var itemRepository = new ItemRepository(new ItemContext(service));
+            var basketContext = new BasketContext(service);
+
+            var itemMapper = new ItemMapper();
+            var basketItemMapper = new BasketItemMapper(itemMapper);
+            var basketMapper = new BasketMapper(basketItemMapper);
+
+            var basketRepository = new BasketRepository(basketContext, basketMapper, basketItemMapper, itemMapper);
+            var itemRepository = new ItemRepository(basketContext, itemMapper);
 
             switch (context.MessageName)
             {
@@ -42,14 +49,14 @@ namespace Basket.Management.Basket.Plugins
             if (!context.InputParameters.Contains("Target") || !(context.InputParameters["Target"] is Entity)) return;
 
             var target = context.InputParameters["Target"] as Entity;
-            var basketItem = target.ToEntity<new_basketitem>();
+            var new_basketItem = target.ToEntity<new_basketitem>();
 
-            if (basketItem.new_item == null || basketItem.new_basket == null) return;
+            if (new_basketItem.new_item == null || new_basketItem.new_basket == null) return;
 
-            var item = itemRepository.GetById(basketItem.new_item.Id);
-            var basket = basketRepository.GetById(basketItem.new_basket.Id);
+            var item = itemRepository.GetById(new_basketItem.new_item.Id);
+            var basket = basketRepository.GetById(new_basketItem.new_basket.Id);
 
-            basket.AddBasketItem(item, basketItem.new_quantity ?? 0);
+            basket.AddBasketItem(item, new_basketItem.new_quantity ?? 0);
             basketRepository.Update(basket);
         }
 

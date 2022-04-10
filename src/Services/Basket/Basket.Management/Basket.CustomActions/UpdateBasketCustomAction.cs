@@ -1,6 +1,8 @@
 ﻿using Basket.Management.Basket.CustomActions.Model;
+using Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate;
 using Basket.Management.Basket.Helpers;
 using Basket.Management.Basket.Infrastructure.Contexts;
+using Basket.Management.Basket.Infrastructure.Mappers;
 using Basket.Management.Basket.Infrastructure.Repositories;
 using Microsoft.Xrm.Sdk;
 using System;
@@ -17,23 +19,33 @@ namespace Basket.Management.Basket.CustomActions
             var serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             var service = serviceFactory.CreateOrganizationService(context.UserId);
 
-            var basketRepository = new BasketRepository(new BasketContext(service));
-            var itemRepository = new ItemRepository(new ItemContext(service));
+            var basketContext = new BasketContext(service);
+
+            var itemMapper = new ItemMapper();
+            var basketItemMapper = new BasketItemMapper(itemMapper);
+            var basketMapper = new BasketMapper(basketItemMapper);
+
+            var basketRepository = new BasketRepository(basketContext, basketMapper, basketItemMapper, itemMapper);
+            var itemRepository = new ItemRepository(basketContext, itemMapper);
                         
             (BasketEvent @event, BasketItemDto basketItemDto) = ParsePayload(context);
             if (basketItemDto.new_itemid == null || basketItemDto.new_basketid == null) return;
 
-            var item = itemRepository.GetByItemId(basketItemDto.new_itemid);
             var basket = basketRepository.GetByBasketId(basketItemDto.new_basketid);
+            var item = itemRepository.GetByItemId(basketItemDto.new_itemid);
 
+            BasketItem basketItem; bool exists;
             switch (@event.EventName)
             {
                 case "CreateBasketItem":
                 case "UpdateBasketItem":
-                    basket.AddBasketItem(item, basketItemDto.new_quantity ?? 0);
+                    (exists, basketItem) = basket.AddBasketItem(item, basketItemDto.new_quantity ?? 0);
+                    if (exists) basketRepository.UpdateBasketItem(basketItem);
+                    if (!exists) basketRepository.CreateBasketItem(basket, basketItem);
                     break;
                 case "DeleteBasketItem":
-                    basket.RemoveBasketItem(basketItemDto.new_itemid);
+                    basketItem = basket.RemoveBasketItem(basketItemDto.new_itemid);
+                    basketRepository.DeleteBasketItem(basketItem);
                     break;
             }
 
