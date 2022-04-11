@@ -41,7 +41,6 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.ItemAggregate
 
         public override bool Equals(object obj)
         {
-            // If the passed object is null
             if (obj == null)
             {
                 return false;
@@ -52,6 +51,7 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.ItemAggregate
             }
             return (this.ItemId == ((Item)obj).ItemId);
         }
+
         public override int GetHashCode()
         {
             return ItemId.GetHashCode();

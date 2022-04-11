@@ -4,10 +4,6 @@ namespace Basket.API.Model
 {
     public class BasketItem
     {
-        [Key]
-        [Required]
-        public string new_id { get; set; }
-
         [Required]
         public string new_itemid { get; set; }
 
@@ -16,8 +12,6 @@ namespace Basket.API.Model
 
         [Required]
         public string new_basketid { get; set; }
-
-        public string new_basketitemid { get; set; } // CRM Guid
 
         public Basket Basket { get; set; }
     }

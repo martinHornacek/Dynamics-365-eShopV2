@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Item.API.Data;
 using Item.API.DTOs;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Item.API.Controllers
 {
@@ -72,5 +72,4 @@ namespace Item.API.Controllers
             return CreatedAtRoute(nameof(GetItemById), new { Id = itemReadDto.new_id }, itemReadDto);
         }
     }
-
 }

@@ -27,7 +27,7 @@ namespace Basket.Management.Basket.CustomActions
 
             var basketRepository = new BasketRepository(basketContext, basketMapper, basketItemMapper, itemMapper);
             var itemRepository = new ItemRepository(basketContext, itemMapper);
-                        
+
             (BasketEvent @event, BasketItemDto basketItemDto) = ParsePayload(context);
             if (basketItemDto.new_itemid == null || basketItemDto.new_basketid == null) return;
 

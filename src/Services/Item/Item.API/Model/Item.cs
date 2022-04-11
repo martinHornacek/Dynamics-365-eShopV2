@@ -3,7 +3,7 @@
 namespace Item.API.Model
 {
     public class Item
-    { 
+    {
         [Key]
         [Required]
         public string new_id { get; set; }

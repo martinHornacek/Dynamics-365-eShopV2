@@ -19,7 +19,7 @@ namespace Basket.Management.Basket.Infrastructure.Mappers
         public Domain.AggregatesModel.BasketAggregate.Basket ToBasket(new_basket new_basket, List<new_basketitem> new_basketitems, List<new_item> new_items)
         {
             var basketItems = new_basketitems.Select(bi => _basketItemMapper.ToBasketItem(bi, new_items)).ToList();
-            var basket =  new Domain.AggregatesModel.BasketAggregate.Basket(new_basket.new_name, basketItems);
+            var basket = new Domain.AggregatesModel.BasketAggregate.Basket(new_basket.new_name, basketItems);
 
             _mappingDictionary[basket] = new_basket;
 

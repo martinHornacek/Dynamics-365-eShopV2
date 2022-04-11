@@ -29,7 +29,7 @@ namespace Basket.Management.Basket.Infrastructure.Repositories
                                 new_name = i.new_name,
                                 new_price = i.new_price,
                             };
-                       
+
             var new_item = itemQuery.FirstOrDefault();
             return _itemMapper.ToItem(new_item);
         }

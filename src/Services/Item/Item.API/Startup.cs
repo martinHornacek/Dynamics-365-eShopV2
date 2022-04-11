@@ -1,5 +1,4 @@
-﻿using System;
-using Item.API.Data;
+﻿using Item.API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace Item.API
 {
@@ -23,7 +23,7 @@ namespace Item.API
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        { 
+        {
             services.AddCors(options =>
             {
                 options.AddPolicy(ItemApiAllowSpecificOrigins, builder => builder.WithOrigins("http://localhost:4200", "https://localhost:4200")

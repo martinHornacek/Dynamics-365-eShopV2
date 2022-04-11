@@ -58,7 +58,6 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
 
         public override bool Equals(object obj)
         {
-            // If the passed object is null
             if (obj == null)
             {
                 return false;
@@ -69,6 +68,7 @@ namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
             }
             return (this.Name == ((Basket)obj).Name);
         }
+
         public override int GetHashCode()
         {
             return Name.GetHashCode();

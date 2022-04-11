@@ -1,5 +1,5 @@
-﻿using System;
-using Basket.Management.Basket.Domain.SeedWork;
+﻿using Basket.Management.Basket.Domain.SeedWork;
+using System;
 
 namespace Basket.Management.Basket.Domain.AggregatesModel.BasketAggregate
 {
