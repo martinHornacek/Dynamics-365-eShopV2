@@ -66,7 +66,7 @@ namespace Basket.API
                 endpoints.MapControllers();
             });
 
-            PrepareDb.Populate(app);
+            //PrepareDb.Populate(app);
         }
     }
 }
